@@ -2,9 +2,11 @@ import React from 'react';
 
 import ApiMixin from '../../mixins/apiMixin';
 import Avatar from '../avatar';
-import GroupChart from './chart';
+import DropdownLink from '../dropdownLink';
+import GroupReleaseChart from './releaseChart';
 import GroupState from '../../mixins/groupState';
 import IndicatorStore from '../../stores/indicatorStore';
+import MenuItem from '../menuItem';
 import SeenInfo from './seenInfo';
 import TagDistributionMeter from './tagDistributionMeter';
 import {t} from '../../locale';
@@ -83,29 +85,43 @@ const GroupSidebar = React.createClass({
 
     return (
       <div className="group-stats">
-        <GroupChart statsPeriod="24h" group={group}
-                    title={t('Last 24 Hours')}
-                    firstSeen={group.firstSeen}
-                    lastSeen={group.lastSeen} />
-        <GroupChart statsPeriod="30d" group={group}
-                    title={t('Last 30 Days')}
-                    className="bar-chart-small"
-                    firstSeen={group.firstSeen}
-                    lastSeen={group.lastSeen} />
+        <div className="env-stats">
+          <h6><span>
+            <DropdownLink title="Production">
+              <MenuItem isActive={true}>Production</MenuItem>
+              <MenuItem>Staging</MenuItem>
+            </DropdownLink>
+          </span></h6>
+          <div className="env-content">
+            <GroupReleaseChart
+              statsPeriod="24h"
+              group={group}
+              title={t('Last 24 Hours')}
+              firstSeen={group.firstSeen}
+              lastSeen={group.lastSeen} />
+            <GroupReleaseChart
+              statsPeriod="30d"
+              group={group}
+              title={t('Last 30 Days')}
+              className="bar-chart-small"
+              firstSeen={group.firstSeen}
+              lastSeen={group.lastSeen} />
 
-        <h6 className="first-seen"><span>{t('First seen')}</span></h6>
-        <SeenInfo
-            orgId={orgId}
-            projectId={projectId}
-            date={group.firstSeen}
-            release={group.firstRelease} />
+            <h6 className="first-seen"><span>{t('First seen')}</span></h6>
+            <SeenInfo
+                orgId={orgId}
+                projectId={projectId}
+                date={group.firstSeen}
+                release={group.firstRelease} />
 
-        <h6 className="last-seen"><span>{t('Last seen')}</span></h6>
-        <SeenInfo
-            orgId={orgId}
-            projectId={projectId}
-            date={group.lastSeen}
-            release={group.lastRelease} />
+            <h6 className="last-seen"><span>{t('Last seen')}</span></h6>
+            <SeenInfo
+                orgId={orgId}
+                projectId={projectId}
+                date={group.lastSeen}
+                release={group.lastRelease} />
+          </div>
+        </div>
 
         <h6><span>{t('Tags')}</span></h6>
         {group.tags.map((data) => {
